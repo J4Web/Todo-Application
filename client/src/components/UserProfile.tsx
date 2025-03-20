@@ -1,7 +1,6 @@
-import React from "react";
+import React, { use } from "react";
 import { User as UserAvator, Download, LogOut } from "lucide-react";
 import { Todo, User } from "../types";
-import { randomUUID } from "crypto";
 
 interface UserProfileProps {
   user: User;
@@ -27,7 +26,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
     // Create a temporary anchor element
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${randomUUID()}-todos.json`;
+    a.download = `${user.username}-todos.json`;
 
     // Trigger the download
     document.body.appendChild(a);
