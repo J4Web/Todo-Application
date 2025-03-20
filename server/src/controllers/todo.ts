@@ -1,4 +1,6 @@
+import type { RequestHandler } from "express";
 import { todoDB } from "../database/todo-repository.ts";
+import { userDB } from "../database/user-repository.ts";
 // Get All Todos
 export const getTodosForUser = async (req, res) => {
   try {
@@ -10,21 +12,24 @@ export const getTodosForUser = async (req, res) => {
 };
 
 // Create Todo
-export const createTodo = async (req, res) => {
+export const createTodo: RequestHandler = async (req, res, next) => {
   const { title, description, priority, tags } = req.body;
 
   try {
+    console.log(req.user);
+    // const user = await userDB.getUserById(req.user.id);
     const newTodo = await todoDB.createTodo({
       title,
       description,
       priority,
       tags,
-      user_id: req,
+      userId: req.user.id,
     });
 
-    res.status(201).json(newTodo.rows[0]);
+    res.status(201).json(newTodo);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error(error);
+    next(error);
   }
 };
 

@@ -35,18 +35,12 @@ type Props = {
 };
 
 const TodoList: React.FC<Props> = ({
-  initialTodos = [],
+  initialTodos: todos = [],
   onTodosChange,
   currentUser,
   users,
   onNewTodo,
 }) => {
-  const [todos, setTodos] = useState<Todo[]>(
-    initialTodos.map((todo) => ({
-      ...todo,
-      completed: todo.completed ?? false,
-    }))
-  );
   const [showTodoModal, setShowTodoModal] = useState<boolean>(false);
   const [showNotesModal, setShowNotesModal] = useState<boolean>(false);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
