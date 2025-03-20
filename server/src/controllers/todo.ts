@@ -2,7 +2,7 @@ import { todoDB } from "../database/todo-repository.ts";
 // Get All Todos
 export const getTodosForUser = async (req, res) => {
   try {
-    const todos = await todoDB.getTodoUser({ username: req.user.username });
+    const todos = await todoDB.getTodoUser({ username: req.params.username });
     res.json(todos);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

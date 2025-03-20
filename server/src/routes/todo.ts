@@ -7,6 +7,6 @@ const router = express.Router();
 router.use(authenticate);
 
 router.post("/", createTodo);
-router.delete("/:id", getTodosForUser);
+router.get("/:username", getTodosForUser);
 
 export default router;
