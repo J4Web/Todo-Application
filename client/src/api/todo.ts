@@ -1,8 +1,8 @@
 import { API } from "./utils";
 
-const getTodosFoUser = async (userId: string) => {
+const getTodosForUser = async (userId: string) => {
   try {
-    const response = await API.get(`/todo/${userId}`);
+    const response = await API.get(`/todos/${userId}`);
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -11,7 +11,7 @@ const getTodosFoUser = async (userId: string) => {
 
 const createTodo = async (params: unknown) => {
   try {
-    const response = await API.post("/todo", params);
+    const response = await API.post("/todos", params);
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -45,4 +45,4 @@ const completeTodo = async (params: unknown) => {
   }
 };
 
-export { getTodosFoUser, createTodo, updateTodo, deleteTodo, completeTodo };
+export { getTodosForUser, createTodo, updateTodo, deleteTodo, completeTodo };

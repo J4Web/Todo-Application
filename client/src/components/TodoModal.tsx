@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Todo, Priority, User } from "../types";
+import { createTodo } from "../api/todo";
 
 interface TodoModalProps {
   todo?: Todo | null;
@@ -22,25 +23,36 @@ export default function TodoModal({
   );
   const [tags, setTags] = useState(todo?.tags.join(", ") || "");
   const [mentions, setMentions] = useState(todo?.mentions.join(", ") || "");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleCreateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      id: todo?.id || "",
-      title,
-      description,
-      priority,
-      tags: tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
-      mentions: mentions
-        .split(",")
-        .map((mention) => mention.trim().replace("@", ""))
-        .filter(Boolean),
-      notes: todo?.notes || [],
-      createdAt: todo?.createdAt || new Date(),
-    });
+    setLoading(true);
+
+    try {
+      const newTodo = await createTodo({
+        title,
+        description,
+        priority,
+        tags: tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
+        mentions: mentions
+          .split(",")
+          .map((mention) => mention.trim().replace("@", ""))
+          .filter(Boolean),
+        notes: todo?.notes || [],
+        createdAt: todo?.createdAt || new Date(),
+      });
+
+      onSave(newTodo);
+      onClose();
+    } catch (error) {
+      console.error("Failed to create todo:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,7 +70,7 @@ export default function TodoModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <form onSubmit={handleCreateTodo} className="p-4 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Title
@@ -123,10 +135,6 @@ export default function TodoModal({
               className="w-full px-3 py-2 border rounded-lg"
               placeholder="@sarah, @mike"
             />
-            <div className="mt-2 text-sm text-gray-500">
-              Available users:{" "}
-              {users.map((user) => `@${user.username}`).join(", ")}
-            </div>
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
@@ -139,9 +147,14 @@ export default function TodoModal({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className={`px-4 py-2 text-white rounded-lg ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              disabled={loading}
             >
-              {todo ? "Save Changes" : "Add Todo"}
+              {loading ? "Saving..." : todo ? "Save Changes" : "Add Todo"}
             </button>
           </div>
         </form>

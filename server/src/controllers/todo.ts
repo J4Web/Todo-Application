@@ -1,7 +1,6 @@
-import { todoDB } from "../database/todo-repository";
-import { userDB } from "../database/user-repository";
+import { todoDB } from "../database/todo-repository.ts";
 // Get All Todos
-export const getTodosFoUser = async (req, res) => {
+export const getTodosForUser = async (req, res) => {
   try {
     const todos = await todoDB.getTodoUser({ username: req.user.username });
     res.json(todos);
