@@ -81,7 +81,9 @@ const App: React.FC = () => {
         );
         setTodos(userTodos);
       }
-    } catch (error) {
+    } catch (error: any) {
+      debugger;
+      alert(error.response.data.message);
       console.error("Login failed:", error);
     }
   };
@@ -89,17 +91,16 @@ const App: React.FC = () => {
     try {
       await registerUser(userData);
       alert("Signup successful! Please log in.");
-    } catch (error) {
-      alert("Signup failed. Please try again.");
+    } catch (error: any) {
+      alert(error.response.data.message);
       console.error("Signup failed:", error);
     }
   };
 
-  // ✅ Ensured Logout Clears Todos
   const handleLogout = () => {
     Cookies.remove("auth_token");
     setUser(null);
-    setTodos([]); // Clear todos on logout
+    setTodos([]);
     setShowProfile(false);
   };
 

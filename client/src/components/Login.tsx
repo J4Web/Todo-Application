@@ -95,13 +95,6 @@ export function Signup({ onSignup, onSwitchToLogin }: SignupProps) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (password === confirmPassword) {
-      onSignup({ username, password });
-    }
-  };
-
   const handleSignUp = () => {
     if (password === confirmPassword) {
       onSignup({ username: username, password: password });
@@ -116,7 +109,7 @@ export function Signup({ onSignup, onSwitchToLogin }: SignupProps) {
         </div>
       </div>
       <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSignUp}>
         <div className="mb-4">
           <label
             htmlFor="Username"
