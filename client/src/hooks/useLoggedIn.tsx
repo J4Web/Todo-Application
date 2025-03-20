@@ -8,7 +8,7 @@ const useIsLogged = (): boolean => {
 
   useEffect(() => {
     const checkAuth = () => {
-      setIsLogged(!!Cookies.get("auth_token")); // Convert token existence to boolean
+      setIsLogged(!!Cookies.get("auth_token"));
     };
 
     checkAuth();
@@ -19,7 +19,8 @@ const useIsLogged = (): boolean => {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, []);
+  });
+  console.log(isLogged);
 
   return isLogged;
 };

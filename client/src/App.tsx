@@ -40,7 +40,6 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showProfile, setShowProfile] = useState<boolean>(false);
-
   useEffect(() => {
     const token = Cookies.get("auth_token");
 
@@ -51,7 +50,6 @@ const App: React.FC = () => {
         if (decoded?.username) {
           setUser({ id: decoded.id, username: decoded.username });
 
-          // Fetch todos for the logged-in user
           getTodosForUser(decoded.username)
             .then(setTodos)
             .catch((error) => console.error("Error fetching todos:", error));
@@ -78,6 +76,7 @@ const App: React.FC = () => {
         });
 
         setUser(loggedInUser.result.user);
+
         const userTodos = await getTodosForUser(
           loggedInUser.result.user.username
         );
@@ -87,7 +86,6 @@ const App: React.FC = () => {
       console.error("Login failed:", error);
     }
   };
-
   const handleSignup = async (userData: AuthData) => {
     try {
       await registerUser(userData);
