@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TodoList from "./components/TodoList";
 import AuthContainer from "./components/Login";
 import UserProfile from "./components/UserProfile";
-import { User, LogIn } from "lucide-react";
+import { User as UserAvatar, LogIn } from "lucide-react";
 import { registerUser, loginUser } from "./api/user";
 import { SnackBarProvider } from "./components/Snackbarmanager";
 import { getTodosForUser } from "./api/todo";
@@ -11,7 +11,6 @@ import useIsLogged from "./hooks/useLoggedIn";
 import { jwtDecode } from "jwt-decode";
 import { Todo } from "./types";
 
-// ✅ Corrected User Interface
 interface User {
   id: string;
   username: string;
@@ -115,7 +114,7 @@ const App: React.FC = () => {
                 onClick={() => setShowProfile(!showProfile)}
                 className="flex items-center gap-2 text-gray-600 hover:text-blue-600"
               >
-                <User size={18} /> {user.username}
+                <UserAvatar size={18} /> {user.username}
               </button>
               <button onClick={handleLogout} className="text-red-500">
                 Logout
@@ -134,7 +133,7 @@ const App: React.FC = () => {
           <AuthContainer onLogin={handleLogin} onSignup={handleSignup} />
         ) : showProfile ? (
           <UserProfile
-            user={user}
+            user={user as any}
             todos={todos}
             onLogout={handleLogout}
             onClose={() => setShowProfile(false)}
@@ -144,8 +143,15 @@ const App: React.FC = () => {
             <TodoList
               initialTodos={todos}
               onTodosChange={setTodos}
-              currentUser={user}
+              currentUser={user as any}
               onNewTodo={(newTodo) => setTodos([...todos, newTodo])}
+              onUpdateTodo={(updatedTodo) => {
+                setTodos(
+                  todos.map((todo) =>
+                    todo.id === updatedTodo.id ? updatedTodo : todo
+                  )
+                );
+              }}
             />
           </SnackBarProvider>
         )}

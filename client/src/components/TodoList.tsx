@@ -10,28 +10,27 @@ import {
   CheckCircle,
   Circle,
 } from "lucide-react";
-import { Todo, Priority, User } from "../types";
+import { Todo, Priority, User as UserType, User } from "../types";
 import TodoModal from "./TodoModal";
 import NotesModal from "./NotesModal";
-import {
-  SnackBarProvider,
-  useSnackBar,
-  useSnackBarHelpers,
-} from "./Snackbarmanager";
+import { useSnackBar } from "./Snackbarmanager";
+
+import { deleteTodo } from "../api/todo";
 
 type Filter = {
   priority: string;
   tag: string;
-  user: string;
+  user: UserType;
   completed: string;
 };
 
 type Props = {
   initialTodos?: Todo[];
   onTodosChange?: (todos: Todo[]) => void;
-  currentUser: User;
-  users: User[];
+  currentUser: User | null;
+  users?: any[];
   onNewTodo?: (todo: Todo) => void;
+  onUpdateTodo?: (todo: Todo) => void;
 };
 
 const TodoList: React.FC<Props> = ({
@@ -40,6 +39,7 @@ const TodoList: React.FC<Props> = ({
   currentUser,
   users,
   onNewTodo,
+  onUpdateTodo,
 }) => {
   const [showTodoModal, setShowTodoModal] = useState<boolean>(false);
   const [showNotesModal, setShowNotesModal] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const TodoList: React.FC<Props> = ({
   const [filter, setFilter] = useState<Filter>({
     priority: "",
     tag: "",
-    user: "",
+    user: currentUser as UserType,
     completed: "all",
   });
   const [sortBy, setSortBy] = useState<string>("date");
@@ -64,7 +64,7 @@ const TodoList: React.FC<Props> = ({
       ...todo,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
-      userId: currentUser.id as string,
+      userId: currentUser?.id as string,
       notes: [],
       completed: false, // New todos start as not completed
     };
@@ -73,37 +73,50 @@ const TodoList: React.FC<Props> = ({
   };
 
   const handleEditTodo = (todo: Todo) => {
-    debugger;
-    setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
+    onUpdateTodo?.(todo);
+
     setShowTodoModal(false);
     setSelectedTodo(null);
   };
 
-  const handleDeleteTodo = (id: string) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const handleDeleteTodo = async (id: string) => {
+    const todo = todos.find((todo) => todo.id === id);
+    if (!todo) return;
+    const confirm = window.confirm(
+      "Are you sure you want to delete this todo?"
+    );
+
+    if (confirm) {
+      const newTodos = todos.filter((todo) => todo.id !== id);
+      await deleteTodo(id);
+      onTodosChange?.(newTodos);
+      showSnackBar("Todo deleted successfully", "success", {
+        title: "Deleted Successfully!",
+        autoHideDuration: 10000,
+        position: "top-right",
+      });
+    }
   };
 
   const handleToggleComplete = (id: string) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-    showSnackBar("Todo updated successfully", "success", {
-      title: "Custom Title",
-      autoHideDuration: 10000,
-      position: "top-right",
-    });
+    const todo = todos.find((todo) => todo.id === id);
+    if (!todo) return;
+    onUpdateTodo?.({ ...todo, completed: !todo.completed });
+    if (!todo.completed) {
+      showSnackBar("Todo updated successfully", "success", {
+        title: "Marked as Completed!",
+        autoHideDuration: 10000,
+        position: "top-right",
+      });
+    }
   };
 
   const handleAddNote = (todoId: string, note: string) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === todoId
-          ? { ...todo, notes: [...(todo.notes || []), note] }
-          : todo
-      )
-    );
+    const todo = todos.find((todo) => todo.id === todoId);
+    if (!todo) return;
+
+    onUpdateTodo?.({ ...todo, notes: [...(todo?.notes ?? []), note] });
+
     setShowNotesModal(false);
     setSelectedTodo(null);
   };
@@ -121,15 +134,6 @@ const TodoList: React.FC<Props> = ({
     }
   };
 
-  const getUserById = (userId: string) => {
-    return (
-      users.find((user) => user.id === userId) || {
-        id: userId,
-        name: "Unknown User",
-      }
-    );
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -140,11 +144,11 @@ const TodoList: React.FC<Props> = ({
   };
 
   const filteredTodos = todos
-    .filter((todo) => todo.userId === currentUser.id)
+    .filter((todo) => todo.userId === currentUser?.id)
     .filter((todo) => {
       if (filter.priority && todo.priority !== filter.priority) return false;
       if (filter.tag && !todo.tags.includes(filter.tag)) return false;
-      if (filter.user && !todo.mentions.includes(filter.user)) return false;
+      if (filter.user && !todo.mentions.includes(filter.user.id)) return false;
       if (filter.completed === "completed" && !todo.completed) return false;
       if (filter.completed === "active" && todo.completed) return false;
       return true;
@@ -346,7 +350,7 @@ const TodoList: React.FC<Props> = ({
                           }`}
                         >
                           <User2 size={12} className="mr-1" />
-                          {getUserById(userId).name}
+                          {/* {getUserById(userId).name} */}
                         </span>
                       ))}
                     </div>
@@ -375,7 +379,6 @@ const TodoList: React.FC<Props> = ({
                   </button>
                   <button
                     onClick={() => {
-                      console.log("Edit todo", todo);
                       setSelectedTodo(todo);
                       setShowTodoModal(true);
                     }}
@@ -406,7 +409,7 @@ const TodoList: React.FC<Props> = ({
             setShowTodoModal(false);
             setSelectedTodo(null);
           }}
-          users={users}
+          users={users as any}
         />
       )}
 
@@ -418,6 +421,7 @@ const TodoList: React.FC<Props> = ({
             setShowNotesModal(false);
             setSelectedTodo(null);
           }}
+          onUpdateTodo={onUpdateTodo}
         />
       )}
     </div>

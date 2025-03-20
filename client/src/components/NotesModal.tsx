@@ -6,19 +6,23 @@ interface NotesModalProps {
   todo: Todo;
   onAddNote: (note: string) => void;
   onClose: () => void;
+  onUpdateTodo?: (todo: Todo) => void;
 }
 
 export default function NotesModal({
   todo,
   onAddNote,
   onClose,
+  onUpdateTodo,
 }: NotesModalProps) {
   const [note, setNote] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
     if (note.trim()) {
       onAddNote(note.trim());
+
+      onUpdateTodo?.({ ...todo, notes: [...(todo?.notes ?? []), note.trim()] });
       setNote("");
     }
   };
@@ -37,21 +41,7 @@ export default function NotesModal({
         </div>
 
         <div className="p-4">
-          <div className="mb-4 max-h-60 overflow-y-auto">
-            {todo.notes.length === 0 ? (
-              <p className="text-gray-500 italic">No notes yet</p>
-            ) : (
-              <ul className="space-y-2">
-                {todo.notes.map((note, index) => (
-                  <li key={index} className="bg-gray-50 p-3 rounded-lg">
-                    {note}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleAddNote} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Add a note

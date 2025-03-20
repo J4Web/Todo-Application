@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 import { todoDB } from "../database/todo-repository.ts";
 import { userDB } from "../database/user-repository.ts";
-export const getTodosForUser = async (req, res) => {
+export const getTodosForUser: RequestHandler = async (req, res) => {
   try {
     const todos = await todoDB.getTodoUser({ username: req.params.username });
     res.json(todos);
@@ -12,7 +12,7 @@ export const getTodosForUser = async (req, res) => {
 
 // Create Todo
 export const createTodo: RequestHandler = async (req, res, next) => {
-  const { title, description, priority, tags } = req.body;
+  const { title, description, priority, tags, mentions } = req.body;
 
   try {
     const newTodo = await todoDB.createTodo({
@@ -20,7 +20,9 @@ export const createTodo: RequestHandler = async (req, res, next) => {
       description,
       priority,
       tags,
-      userId: req.user.id,
+      mentions,
+      //@ts-ignore
+      userId: req?.user?.id,
     });
 
     res.status(201).json(newTodo);
@@ -31,29 +33,42 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 };
 
 // Update Todo
-export const updateTodo = async (req, res) => {
+export const updateTodo: RequestHandler = async (req, res, next) => {
   const { title, description, priority, tags } = req.body;
+  const { id } = req.params;
+
+  if (!id) {
+    res.status(400).json({ message: "Missing ID in request parameters" });
+    return;
+  }
 
   try {
-    await pool.query(
-      "UPDATE todos SET title = $1, description = $2, priority = $3, tags = $4 WHERE id = $5 AND user_id = $6",
-      [title, description, priority, tags, req.params.id, req.user.userId]
-    );
+    await todoDB.updateTodo(id, { title, description, priority, tags });
 
     res.json({ message: "Todo updated successfully" });
+  } catch (error) {
+    console.error("Error updating todo:", error);
+    next(error);
+  }
+};
+
+// Delete Todo
+export const deleteTodo: RequestHandler = async (req, res) => {
+  try {
+    await todoDB.deleteTodo({
+      id: req.params.id,
+    });
+    res.json({ message: "Todo deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
 
-// Delete Todo
-export const deleteTodo = async (req, res) => {
+export const updateNote: RequestHandler = async (req, res) => {
   try {
-    await pool.query("DELETE FROM todos WHERE id = $1 AND user_id = $2", [
-      req.params.id,
-      req.user.userId,
-    ]);
-    res.json({ message: "Todo deleted successfully" });
+    const { id, note } = req.body;
+    await todoDB.updateTodo(id, note);
+    res.json({ message: "Note updated successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

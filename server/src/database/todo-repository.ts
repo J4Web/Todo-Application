@@ -24,22 +24,25 @@ export class TodoRepository {
   async createTodo(data: any) {
     return await this.db.todo.create({ data });
   }
-
-  async updateTodo() {
+  async updateTodo(id: string, payload: any) {
     return await this.db.todo.update({
       where: {
-        id: 1,
+        id,
       },
       data: {
-        completed: true,
+        title: payload.title,
+        description: payload.description,
+        priority: payload.priority,
+        tags: payload.tags,
+        mentions: payload.mentions,
       },
     });
   }
 
-  async deleteTodo() {
+  async deleteTodo(data: any) {
     return await this.db.todo.delete({
       where: {
-        id: 1,
+        id: data.id,
       },
     });
   }

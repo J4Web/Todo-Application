@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Todo, Priority, User } from "../types";
-import { createTodo } from "../api/todo";
+import { createTodo, updateTodo } from "../api/todo";
 
 interface TodoModalProps {
   todo?: Todo | null;
@@ -10,12 +10,7 @@ interface TodoModalProps {
   users: User[];
 }
 
-export default function TodoModal({
-  todo,
-  onSave,
-  onClose,
-  users,
-}: TodoModalProps) {
+export default function TodoModal({ todo, onSave, onClose }: TodoModalProps) {
   const [title, setTitle] = useState(todo?.title || "");
   const [description, setDescription] = useState(todo?.description || "");
   const [priority, setPriority] = useState<Priority>(
@@ -24,7 +19,6 @@ export default function TodoModal({
   const [tags, setTags] = useState(todo?.tags.join(", ") || "");
   const [mentions, setMentions] = useState(todo?.mentions.join(", ") || "");
 
-  console.log(mentions);
   const [loading, setLoading] = useState(false);
 
   const handleCreateTodo = async (e: React.FormEvent) => {
@@ -56,6 +50,34 @@ export default function TodoModal({
     }
   };
 
+  const handleUpdateTodo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const updatedTodo = await updateTodo({
+        id: todo?.id,
+        title,
+        userId: todo?.userId,
+        description,
+        priority,
+        tags: tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
+        mentions: mentions
+          .split(",")
+          .map((mention) => mention.trim().replace("@", ""))
+          .filter(Boolean),
+      });
+
+      onSave(updatedTodo);
+      onClose();
+    } catch (error) {
+      console.error("Failed to update todo:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg w-full max-w-md">
@@ -71,7 +93,7 @@ export default function TodoModal({
           </button>
         </div>
 
-        <form onSubmit={handleCreateTodo} className="p-4 space-y-4">
+        <form className="p-4 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Title
@@ -148,6 +170,7 @@ export default function TodoModal({
             </button>
             <button
               type="submit"
+              onClick={!todo ? handleCreateTodo : handleUpdateTodo}
               className={`px-4 py-2 text-white rounded-lg ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"

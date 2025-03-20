@@ -1,13 +1,11 @@
 import React from "react";
-import { User, Download, LogOut } from "lucide-react";
+import { User as UserAvator, Download, LogOut } from "lucide-react";
+import { Todo, User } from "../types";
+import { randomUUID } from "crypto";
 
 interface UserProfileProps {
-  user: {
-    id: string;
-    name: string;
-    password: string;
-  };
-  todos: { id: number; title: string; completed: boolean }[];
+  user: User;
+  todos: Todo[];
   onLogout: () => void;
   onClose: () => void;
 }
@@ -19,10 +17,8 @@ const UserProfile: React.FC<UserProfileProps> = ({
   onClose,
 }) => {
   const handleExport = () => {
-    // Create a JSON string of the user's todos
     const todosData = JSON.stringify(todos, null, 2);
 
-    // Create a blob with the JSON data
     const blob = new Blob([todosData], { type: "application/json" });
 
     // Create a URL for the blob
@@ -31,7 +27,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
     // Create a temporary anchor element
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${user.name}-todos.json`;
+    a.download = `${randomUUID()}-todos.json`;
 
     // Trigger the download
     document.body.appendChild(a);
@@ -48,10 +44,12 @@ const UserProfile: React.FC<UserProfileProps> = ({
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-blue-100 rounded-full">
-              <User className="h-6 w-6 text-blue-600" />
+              <UserAvator className="h-6 w-6 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-800">{user.name}</h2>
+              <h2 className="text-xl font-bold text-gray-800">
+                {user.username}
+              </h2>
             </div>
           </div>
           <button

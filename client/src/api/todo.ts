@@ -11,7 +11,6 @@ const getTodosForUser = async (userId: string) => {
 
 const createTodo = async (params: unknown) => {
   try {
-    debugger;
     const response = await API.post("/todos", params);
     return response.data;
   } catch (err) {
@@ -21,7 +20,8 @@ const createTodo = async (params: unknown) => {
 
 const updateTodo = async (params: unknown) => {
   try {
-    const response = await API.put("/todo", params);
+    //@ts-ignore
+    const response = await API.put(`/todos/${params.id}`, params);
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -30,7 +30,7 @@ const updateTodo = async (params: unknown) => {
 
 const deleteTodo = async (params: unknown) => {
   try {
-    const response = await API.delete("/todo", params!);
+    const response = await API.delete(`/todos/${params}`, params!);
     return response.data;
   } catch (err) {
     return Promise.reject(err);
@@ -40,6 +40,15 @@ const deleteTodo = async (params: unknown) => {
 const completeTodo = async (params: unknown) => {
   try {
     const response = await API.put("/todo/complete", params);
+    return response.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
+const updateNote = async (params: unknown) => {
+  try {
+    const response = await API.put("/todos/note", params);
     return response.data;
   } catch (err) {
     return Promise.reject(err);

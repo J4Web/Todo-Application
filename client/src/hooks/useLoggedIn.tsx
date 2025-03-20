@@ -20,7 +20,6 @@ const useIsLogged = (): boolean => {
       window.removeEventListener("storage", handleStorageChange);
     };
   });
-  console.log(isLogged);
 
   return isLogged;
 };
