@@ -5,10 +5,12 @@ export interface Todo {
   title: string;
   description: string;
   priority: Priority;
+  userId: string;
+  completed: boolean;
   tags: string[];
   mentions: string[];
   notes: string[];
-  createdAt: Date;
+  createdAt: string;
 }
 
 export interface User {

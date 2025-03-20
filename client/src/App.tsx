@@ -9,6 +9,7 @@ import { getTodosForUser } from "./api/todo";
 import Cookies from "js-cookie";
 import useIsLogged from "./hooks/useLoggedIn";
 import { jwtDecode } from "jwt-decode";
+import { Todo } from "./types";
 
 // ✅ Corrected User Interface
 interface User {
@@ -37,16 +38,14 @@ interface AuthResponse {
 const App: React.FC = () => {
   const isLogged = useIsLogged();
   const [user, setUser] = useState<User | null>(null);
-  const [todos, setTodos] = useState<any[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [showProfile, setShowProfile] = useState<boolean>(false);
 
-  // ✅ Corrected `useEffect` Hook
   useEffect(() => {
-    const token = Cookies.get("auth_token"); // Ensure consistent key name
+    const token = Cookies.get("auth_token");
 
     if (token) {
       try {
-        // Decode the JWT token to get user data
         const decoded: { username: string; id: string } = jwtDecode(token);
 
         if (decoded?.username) {
@@ -68,7 +67,6 @@ const App: React.FC = () => {
     }
   }, [isLogged]);
 
-  // ✅ Fixed Type Issues in `handleLogin`
   const handleLogin = async (userData: AuthData) => {
     try {
       const loggedInUser: AuthResponse = await loginUser(userData);
@@ -90,7 +88,6 @@ const App: React.FC = () => {
     }
   };
 
-  // ✅ Fixed `handleSignup`
   const handleSignup = async (userData: AuthData) => {
     try {
       await registerUser(userData);

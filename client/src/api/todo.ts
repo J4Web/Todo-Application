@@ -11,6 +11,7 @@ const getTodosForUser = async (userId: string) => {
 
 const createTodo = async (params: unknown) => {
   try {
+    debugger;
     const response = await API.post("/todos", params);
     return response.data;
   } catch (err) {

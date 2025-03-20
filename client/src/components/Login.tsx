@@ -17,7 +17,6 @@ interface SignupProps {
   onSwitchToLogin: () => void;
 }
 
-// Login Component
 export function Login({ onLogin, onSwitchToSignup }: LoginProps) {
   const [Username, setUsername] = useState("");
   const [password, setPassword] = useState("");

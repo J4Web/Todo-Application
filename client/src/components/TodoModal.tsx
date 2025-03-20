@@ -10,12 +10,7 @@ interface TodoModalProps {
   users: User[];
 }
 
-export default function TodoModal({
-  todo,
-  onSave,
-  onClose,
-  users,
-}: TodoModalProps) {
+export default function TodoModal({ todo, onSave, onClose }: TodoModalProps) {
   const [title, setTitle] = useState(todo?.title || "");
   const [description, setDescription] = useState(todo?.description || "");
   const [priority, setPriority] = useState<Priority>(
@@ -23,12 +18,14 @@ export default function TodoModal({
   );
   const [tags, setTags] = useState(todo?.tags.join(", ") || "");
   const [mentions, setMentions] = useState(todo?.mentions.join(", ") || "");
+
+  console.log(mentions);
   const [loading, setLoading] = useState(false);
 
   const handleCreateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    debugger;
     try {
       const newTodo = await createTodo({
         title,

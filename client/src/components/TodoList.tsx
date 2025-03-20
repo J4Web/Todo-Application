@@ -64,7 +64,7 @@ const TodoList: React.FC<Props> = ({
       ...todo,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
-      userId: currentUser.id,
+      userId: currentUser.id as string,
       notes: [],
       completed: false, // New todos start as not completed
     };
@@ -73,6 +73,7 @@ const TodoList: React.FC<Props> = ({
   };
 
   const handleEditTodo = (todo: Todo) => {
+    debugger;
     setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
     setShowTodoModal(false);
     setSelectedTodo(null);
@@ -88,20 +89,11 @@ const TodoList: React.FC<Props> = ({
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
-    showSnackBar(
-      "This is a custom snackbar with a title and action button",
-      "success",
-      {
-        title: "Custom Title",
-        action: (
-          <button className="bg-green-500 text-white px-2 py-1 rounded text-xs">
-            Action
-          </button>
-        ),
-        autoHideDuration: 10000,
-        position: "top-right",
-      }
-    );
+    showSnackBar("Todo updated successfully", "success", {
+      title: "Custom Title",
+      autoHideDuration: 10000,
+      position: "top-right",
+    });
   };
 
   const handleAddNote = (todoId: string, note: string) => {
@@ -158,9 +150,6 @@ const TodoList: React.FC<Props> = ({
       return true;
     })
     .sort((a, b) => {
-      // Completed todos can appear at bottom if wanted
-      // if (a.completed !== b.completed) return a.completed ? 1 : -1;
-
       if (sortBy === "date") {
         return (
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -174,7 +163,6 @@ const TodoList: React.FC<Props> = ({
       return priorityOrder[b.priority] - priorityOrder[a.priority];
     });
 
-  // Get all unique tags from todos
   const allTags = Array.from(new Set(todos.flatMap((todo) => todo.tags)));
 
   return (
@@ -387,6 +375,7 @@ const TodoList: React.FC<Props> = ({
                   </button>
                   <button
                     onClick={() => {
+                      console.log("Edit todo", todo);
                       setSelectedTodo(todo);
                       setShowTodoModal(true);
                     }}
