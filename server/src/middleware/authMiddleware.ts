@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 interface AuthRequest extends Request {
   user?: any;
 }
 
-export const authenticate = (
+export const authenticate: any = (
   req: AuthRequest,
   res: Response,
   next: NextFunction

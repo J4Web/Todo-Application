@@ -1,15 +1,12 @@
 import express from "express";
-// import {
-//   getTodos,
-//   createTodo,
-//   deleteTodo,
-// } from "../controllers/todoController";
-import { authenticate } from "../middleware/authMiddleware";
-import { getTodosFoUser } from "../controllers/todoController";
+
+import { authenticate } from "../middleware/authMiddleware.ts";
+import { getTodosFoUser, createTodo } from "../controllers/todo.ts";
 const router = express.Router();
 
-// router.get("/", authenticate, getTodos);
-// router.post("/", authenticate, createTodo);
-router.delete("/:id", authenticate, getTodosFoUser);
+router.use(authenticate);
+
+router.post("/", createTodo);
+router.delete("/:id", getTodosFoUser);
 
 export default router;
