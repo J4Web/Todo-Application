@@ -32,6 +32,12 @@ This application was built in **4-5 hours** due to a tight work schedule. Some f
 
 ## Setup
 
+### 🔹 Test User Credentials  
+You can log in with the following test account:  
+- **Username:** `robert`  
+- **Password:** `0123456789`  
+
+
 ### Client Setup
 
 1. Navigate to the client folder:
