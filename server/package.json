@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch --env-file .env src/server.ts"
+    "build": "tsc",
+    "dev": "node --watch --env-file .env src/server.ts",
+    "start": "node --env-file=.env dist/server.js",
+    "prestart": "npm run build"
   },
   "author": "",
   "license": "ISC",

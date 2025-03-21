@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { User as UserAvator, Download, LogOut } from "lucide-react";
 import { Todo, User } from "../types";
 
@@ -41,29 +41,31 @@ const UserProfile: React.FC<UserProfileProps> = ({
     <div className="max-w-4xl mx-auto p-4">
       <div className="bg-white p-6 rounded-lg shadow-sm border">
         <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 ">
             <div className="p-3 bg-blue-100 rounded-full">
-              <UserAvator className="h-6 w-6 text-blue-600" />
+              <UserAvator className="h-6 w-6 text-blue-600 cursor-pointer" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-800">
+              <h2 className="text-xl font-bold text-gray-800 cursor-pointer">
                 {user.username}
               </h2>
             </div>
           </div>
-          <button
-            onClick={onLogout}
-            className="flex items-center gap-2 text-gray-600 hover:text-red-600"
-          >
-            <LogOut size={18} /> Logout
-          </button>
+          <div className="flex space-x-6">
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-2 text-gray-600 hover:text-red-600"
+            >
+              <LogOut size={18} /> Logout
+            </button>
 
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 text-gray-600 hover:text-red-600"
-          >
-            Close
-          </button>
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 text-gray-600 hover:text-red-600"
+            >
+              Close
+            </button>
+          </div>
         </div>
 
         <div className="border-t pt-4">

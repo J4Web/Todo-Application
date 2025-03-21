@@ -82,7 +82,6 @@ const App: React.FC = () => {
         setTodos(userTodos);
       }
     } catch (error: any) {
-      debugger;
       alert(error.response.data.message);
       console.error("Login failed:", error);
     }
@@ -110,14 +109,18 @@ const App: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-800">Todo App</h1>
           {isLogged && user ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 cursor-pointer">
               <button
                 onClick={() => setShowProfile(!showProfile)}
-                className="flex items-center gap-2 text-gray-600 hover:text-blue-600"
+                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 cursor-pointer"
               >
-                <UserAvatar size={18} /> {user.username}
+                <UserAvatar className="cursor-pointer" size={18} />
+                {user.username}
               </button>
-              <button onClick={handleLogout} className="text-red-500">
+              <button
+                onClick={handleLogout}
+                className="text-red-500 cursor-pointer"
+              >
                 Logout
               </button>
             </div>

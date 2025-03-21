@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { db } from "./db.ts";
+import { db } from "./db.js";
 export interface UserGetTodo {
   username: string;
 }

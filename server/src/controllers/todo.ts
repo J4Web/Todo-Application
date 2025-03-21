@@ -1,6 +1,5 @@
 import type { RequestHandler } from "express";
-import { todoDB } from "../database/todo-repository.ts";
-import { userDB } from "../database/user-repository.ts";
+import { todoDB } from "../database/todo-repository.js";
 export const getTodosForUser: RequestHandler = async (req, res) => {
   try {
     const todos = await todoDB.getTodoUser({ username: req.params.username });
