@@ -27,6 +27,9 @@ This application was built in **4-5 hours** due to a tight work schedule. Some f
 - Users **cannot** tag other users in their todos.  
   
 
+## ⚠️ Note on `.env`  
+
+I have **pushed the `.env` file** to the repository **intentionally**. I am fully aware that **one should never do this**, but I did so **to make setup easier** for anyone reviewing or running the project.  
 
 ---
 
