@@ -6,10 +6,6 @@
 - **Database:** PostgreSQL (via Prisma ORM)  
 - **Authentication:** JWT (JSON Web Token)  
 
-Ensure Node vesion - v23.7.0
-Ensure npm version - v10.9.2
-
-
 
 ## ⏳ Development Time  
 
@@ -83,7 +79,7 @@ You can log in with the following test account:
    ```
 5. Start the backend:
    ```sh
-   npm run dev
+   npm run start
    ```
    The backend runs on [http://localhost:8080](http://localhost:8080).
 
