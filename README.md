@@ -6,6 +6,11 @@
 - **Database:** PostgreSQL (via Prisma ORM)  
 - **Authentication:** JWT (JSON Web Token)  
 
+Ensure Node vesion - v23.7.0
+Ensure npm version - v10.9.2
+
+
+
 ## ⏳ Development Time  
 
 This application was built in **4-5 hours** due to a tight work schedule. Some features were prioritized, while others were left out due to time constraints.  
