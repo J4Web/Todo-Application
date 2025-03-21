@@ -1,25 +1,32 @@
-# Project Name
+# TODO Application
 
-## Description
-A brief description of the project, including its purpose, features, and key technologies used.
+# Tech Stack
+- **Frontend:** React, Custom Hooks, API Calls  
+- **Backend:** Node.js, Express  
+- **Database:** PostgreSQL (via Prisma ORM)  
+- **Authentication:** JWT (JSON Web Token)  
 
-## Tech Stack
-- **Frontend:** React, Custom Hooks, API Calls
-- **Backend:** Node.js, Express
-- **Database:** PostgreSQL (via Prisma ORM)
-- **Authentication:** JWT (JSON Web Token)
+## ⏳ Development Time  
 
-## Features
-- User Authentication using JWT
-- **Get Todos** - Users can fetch their own todos
-- **Create Todos** - Users can create new todos
-- **Add Notes** - User can add notes
-- **Delete Todos** - Users can delete Todos
-- **Update Todos**- Users can update Todos
+This application was built in **4-5 hours** due to a tight work schedule. Some features were prioritized, while others were left out due to time constraints.  
 
-## What's Not Implemented
-- Users can view other users' todos by navigating to a different tab
-- Users can tag other users in their todos
+## Features Implemented  
+
+- **User Authentication** using JWT  
+- **Get Todos** - Users can fetch their own todos  
+- **Create Todos** - Users can create new todos  
+- **Add Notes** - Users can add notes to their todos  
+- **Delete Todos** - Users can delete todos  
+- **Update Todos** - Users can update todos  
+- **Basic Error Handling & Validation**
+- **Sorting** by **priority, date, and status**  
+- **Filtering** by **tags** and **status** 
+
+## What's Not Implemented  
+- Users **cannot** view other users' todos.  
+- Users **cannot** tag other users in their todos.  
+  
+
 
 ---
 
